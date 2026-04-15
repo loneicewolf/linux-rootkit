@@ -9,3 +9,22 @@ Because i've used dirty coding here, as the kernel updated, and also I was fever
 
 thanks! take care!
 it has been a nice year, this is a "1 day after birthday challenge" I did for myself, to make a modern rootkit for the modern kernels, I am still working on a fedora version (because that's what qubes is based on)
+
+
+# TIMELINE
+## DEBIAN
+- [X] FILE HIDER (including directories - 'everything is a file')
+- [ ] NETWORK CONNECTIONS
+- [ ] RANDOMNESS BACKDOOR
+- [ ] ELEVATION OF PRIVILEGE 
+- [ ] LKM COMMAND EXECUTION
+- [ ] PERSISTENCE
+
+
+## FEDORA
+- [ ] FILE HIDER (including directories - 'everything is a file')
+- [ ] NETWORK CONNECTIONS
+- [ ] RANDOMNESS BACKDOOR
+- [ ] ELEVATION OF PRIVILEGE 
+- [ ] LKM COMMAND EXECUTION
+- [ ] PERSISTENCE
