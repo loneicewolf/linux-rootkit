@@ -7,6 +7,7 @@ As usual, only use this on your own macine, Thank you very much!
 And, this rootkit might (with 70~80% probability) crash your specific VM/bare metal because i've used dirty coding here, as the kernel updated, and also I was feverish so, this is probably bad..
 ..But it works. Thats what I consider a success.
 
+
 ## Goal of this 
 As I turned 26, I thought "lets make another rootkit for a new kernel, since fedora/qubes updated", and yeah here I am!
 
@@ -37,3 +38,13 @@ Love from Sweden.
 - [ ] ELEVATION OF PRIVILEGE 
 - [X] LKM COMMAND EXECUTION
 - [ ] PERSISTENCE
+
+
+
+
+## to myself:
+TODO
+- [ ] make a script which disabled security measures like KASLR and stuff, for the user, so the user doesn't have to copy paste commands.
+  - [ ] lockdown
+  - [ ] setenforce=0
+  - [ ] kaslr
