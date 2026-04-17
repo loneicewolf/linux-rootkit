@@ -27,10 +27,10 @@ PROGRESS \
 - [ ] PERSISTENCE
 
 **FEDORA**
+- [X] **FILE HIDER (including directories - 'everything is a file')** - Done at Apr 17th. Was a good challenge.
 - [X] LKM KEYLOGGER - Done at apr 17th
 - [X] ELEVATION OF PRIVILEGE - Done at apr 15th~
 - [X] LKM COMMAND EXECUTION - Done at apr 16th~
-- [ ] FILE HIDER (including directories - 'everything is a file')
 - [ ] NETWORK CONNECTIONS
 - [ ] RANDOMNESS BACKDOOR
 - [ ] PERSISTENCE
