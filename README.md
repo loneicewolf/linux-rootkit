@@ -5,6 +5,10 @@ Sending hugs to everyone reading this! \(^v^)/
 <img width="3309" height="3137" alt="Made With NotebookLM" src="https://github.com/user-attachments/assets/93e089cb-ffad-43ae-bdfc-c32bf9a805fd" />
 
 
+What does these rootkits work on?
+specifically
+`Linux fedora 6.19.11-200.fc43.x86_64 #1 SMP PREEMPT_DYNAMIC Thu Apr  2 16:55:52 UTC 2026 x86_64 GNU/Linux`
+
 ----
 
 **A suite of linux-rootkits** \
