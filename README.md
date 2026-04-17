@@ -2,24 +2,13 @@
 ♥️ I will be continuing on this! I actually finished the file-hider-rootkit (for fedora, freshly updated 2026) at a hospital stay. (April 17th from the time writing this!) I am soon home though!
 Sending hugs to everyone reading this! \(^v^)/
 
-
 ----
 
 **A suite of linux-rootkits** \
-(why calling it "nano suit"? its a ref. from the Crysis games.)
 Rootkits for Kernel  6.12.74
-
-**Disclaimer** \
-As usual, only use this on your own macine, Thank you very much!
-And, this rootkit might (with 70~80% probability) crash your specific VM/bare metal because i've used dirty coding here, as the kernel updated, and also I was feverish so, this is probably bad..
-..But it works. Thats what I consider a success.
-
 
 **Goal of this** \
 As I turned 26, I thought "lets make another rootkit for a new kernel, since fedora/qubes updated", and yeah here I am!
-
-
-**Major Goal** \
 create original ideas like for example a DISK-HIDER or SECRET-STORAGE.
 
 
@@ -49,6 +38,7 @@ PROGRESS \
   - [ ] kaslr
 
 
-**Take Care!**
-Love from Sweden.
-//Jane.
+**Disclaimer** \
+As usual, only use this on your own macine, Thank you very much!
+And, this rootkit might (with 70~80% probability) crash your specific VM/bare metal because i've used dirty coding here, as the kernel updated, and also I was feverish so, this is probably bad..
+..But it works. Thats what I consider a success.
