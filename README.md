@@ -1,3 +1,10 @@
+# Major parts is done!
+♥️ I will be continuing on this! I actually finished the file-hider-rootkit (for fedora, freshly updated 2026) at a hospital stay. (April 17th from the time writing this!) I am soon home though!
+Sending hugs to everyone reading this! \(^v^)/
+
+
+----
+
 **A suite of linux-rootkits** \
 (why calling it "nano suit"? its a ref. from the Crysis games.)
 Rootkits for Kernel  6.12.74
