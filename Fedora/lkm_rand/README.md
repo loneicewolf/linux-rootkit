@@ -1,5 +1,7 @@
 ```py
+# Randomness Predictor While the LKM is loaded.
 import struct
+import sys
 
 def xorshift32(state):
     state ^= (state << 13) & 0xFFFFFFFF
@@ -7,31 +9,54 @@ def xorshift32(state):
     state ^= (state << 5) & 0xFFFFFFFF
     return state
 
-# Your starting seed from the LKM
-state = 0xACE1BA5E
+def predict_perfectly(hex_input, initial_seed=0xACE1BA5E):
+    # Parse hexdump input into raw bytes
+    input_chunks = hex_input.split()
+    target_bytes = []
+    for chunk in input_chunks:
+        b = bytes.fromhex(chunk)
+        target_bytes.append(b[1]) # hexdump swaps them
+        target_bytes.append(b[0])
+    
+    state = initial_seed
+    found = False
+    
+    # We search the tape
+    for i in range(1000000):
+        curr = state
+        match = True
+        for b in target_bytes:
+            if (curr & 0xFF) != b:
+                match = False
+                break
+            curr = xorshift32(curr)
+        
+        if match:
+            # We found the sequence. 'curr' is the state AFTER the sequence.
+            # But hexdump might be showing the next bytes in the SAME line.
+            print(f"[!] Match found at offset {i}")
+            
+            # Predict the next 16 bytes exactly
+            res = []
+            for _ in range(16):
+                res.append(curr & 0xFF)
+                curr = xorshift32(curr)
+            
+            # Print in hexdump format
+            formatted = []
+            for j in range(0, len(res), 2):
+                word = (res[j+1] << 8) | res[j]
+                formatted.append(f"{word:04x}")
+            print(f"[+] Next 16 bytes: {' '.join(formatted)}")
+            found = True
+            break
+        state = xorshift32(state)
 
-# How many bytes have you already read? 
-# If you just did head -c1024, you've consumed 1024 bytes.
-bytes_consumed = 1024 
+    if not found:
+        print("[-] No match found.")
 
-# Catch up the script to the current kernel state
-for _ in range(bytes_consumed):
-    state = xorshift32(state)
-
-print(f"--- Predicting the NEXT 16 bytes (at offset {bytes_consumed}) ---")
-
-# Generate the next 16 bytes
-output_bytes = []
-for _ in range(16):
-    state = xorshift32(state)
-    output_bytes.append(state & 0xFF)
-
-# Format like hexdump (Little-Endian 16-bit chunks)
-for i in range(0, len(output_bytes), 2):
-    # This packs two bytes and flips them for the display
-    chunk = struct.unpack('<H', bytes(output_bytes[i:i+2]))[0]
-    print(f"{chunk:04x}", end=" ")
-print("\n---------------------------------------------------------")
+if __name__ == "__main__":
+    predict_perfectly(sys.argv[1])
 ```
 
 ```Makefile
