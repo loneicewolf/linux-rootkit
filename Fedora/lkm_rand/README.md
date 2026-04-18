@@ -1,3 +1,38 @@
+```py
+import struct
+
+def xorshift32(state):
+    state ^= (state << 13) & 0xFFFFFFFF
+    state ^= (state >> 17) & 0xFFFFFFFF
+    state ^= (state << 5) & 0xFFFFFFFF
+    return state
+
+# Your starting seed from the LKM
+state = 0xACE1BA5E
+
+# How many bytes have you already read? 
+# If you just did head -c1024, you've consumed 1024 bytes.
+bytes_consumed = 1024 
+
+# Catch up the script to the current kernel state
+for _ in range(bytes_consumed):
+    state = xorshift32(state)
+
+print(f"--- Predicting the NEXT 16 bytes (at offset {bytes_consumed}) ---")
+
+# Generate the next 16 bytes
+output_bytes = []
+for _ in range(16):
+    state = xorshift32(state)
+    output_bytes.append(state & 0xFF)
+
+# Format like hexdump (Little-Endian 16-bit chunks)
+for i in range(0, len(output_bytes), 2):
+    # This packs two bytes and flips them for the display
+    chunk = struct.unpack('<H', bytes(output_bytes[i:i+2]))[0]
+    print(f"{chunk:04x}", end=" ")
+print("\n---------------------------------------------------------")
+```
 
 ```Makefile
 obj-m += lkm.o
