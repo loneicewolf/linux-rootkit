@@ -56,38 +56,46 @@ clean:
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("LIW");
-MODULE_DESCRIPTION("VFS Randomness Override (Safe Mode)");
+MODULE_DESCRIPTION("VFS Randomness Override (Predictable Mode)");
 
+/* ---------------------------------------------------------
+ * Xorshift PRNG Logic
+ * --------------------------------------------------------- */
+static uint32_t secret_state = 0xACE1BA5E; // Your secret seed
+
+static uint32_t xorshift32(void)
+{
+    uint32_t x = secret_state;
+    x ^= x << 13;
+    x ^= x >> 17;
+    x ^= x << 5;
+    secret_state = x;
+    return x;
+}
+
+/* ---------------------------------------------------------
+ * Hooking Infrastructure
+ * --------------------------------------------------------- */
 typedef unsigned long (*kallsyms_lookup_name_t)(const char *name);
 static kallsyms_lookup_name_t real_kallsyms_lookup_name;
 
-/* * The signature for the urandom read function.
- * It uses the iov_iter struct, which is how modern kernels handle read/write.
- */
 static ssize_t (*orig_urandom_read_iter)(struct kiocb *iocb, struct iov_iter *iter);
 
-/* ---------------------------------------------------------
- * The VFS Hook Logic
- * --------------------------------------------------------- */
 static ssize_t hook_urandom_read_iter(struct kiocb *iocb, struct iov_iter *iter)
 {
     ssize_t ret;
     ret = orig_urandom_read_iter(iocb, iter);
 
-    // Increase the limit or remove it to catch 'strings'
-    // And use '1' (0x31) instead of 0x01
     if (ret > 0) { 
         void __user *user_buf = iter->ubuf;
         
         if (user_buf) {
-            // Be careful with large buffers in the kernel! 
-            // We use a loop or a smaller fixed buffer to fill the user space.
-            unsigned char printable_one = 0x31; // The character '1'
             size_t i;
-
             for (i = 0; i < ret; i++) {
-                // Copying one by one is slow but safe for a test LKM
-                if (copy_to_user(user_buf + i, &printable_one, 1)) {
+                // Generate a "random" byte using our formula
+                uint8_t predictable_byte = (uint8_t)(xorshift32() & 0xFF);
+                
+                if (copy_to_user(user_buf + i, &predictable_byte, 1)) {
                     break;
                 }
             }
@@ -96,6 +104,7 @@ static ssize_t hook_urandom_read_iter(struct kiocb *iocb, struct iov_iter *iter)
 
     return ret;
 }
+
 /* ---------------------------------------------------------
  * Ftrace Boilerplate
  * --------------------------------------------------------- */
@@ -124,7 +133,6 @@ static struct ftrace_hook random_hook = {
     .orig_addr = &orig_urandom_read_iter
 };
 
-/* Module Init/Exit logic remains the same... */
 static int resolve_kallsyms(void) {
     struct kprobe kp = { .symbol_name = "kallsyms_lookup_name" };
     int ret = register_kprobe(&kp);
@@ -146,7 +154,7 @@ static int __init hook_init(void) {
     ftrace_set_filter_ip(&random_hook.ops, random_hook.address, 0, 0);
     register_ftrace_function(&random_hook.ops);
 
-    pr_info("ROOK: VFS entropy hook engaged.\n");
+    pr_info("ROOK: VFS predictable entropy engaged.\n");
     return 0;
 }
 
